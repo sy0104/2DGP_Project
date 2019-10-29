@@ -14,6 +14,9 @@ background = None
 moving_boss = None
 big_enemy = None
 small_enemy = None
+smallest_enemy = None
+beat_up = None
+beat_down = None
 
 # 배경
 class Background:
@@ -59,7 +62,6 @@ class Moving_Boss:
         self.time += 1
         if self.time % 100 == 0:
             self.frame = (self.frame + 1) % 4
-        #delay(0.5)
 
     def draw(self):
         self.image.clip_draw(self.frame * 600, 0, 600, 600, self.x, self.y)
@@ -88,24 +90,75 @@ class SmallEnemy:
         self.x += self.speed
 
     def draw(self):
-        self.image.clip_draw(0, 0, 30, 30, self.x, self.y)
+        self.image.clip_draw(0, 0, 15, 15, self.x, self.y)
 
+#smallest enemy
+class SmallestEnemy:
+    def __init__(self):
+        self.image = load_image('smallest_enemy.png')
+        self.x, self.y = random.randint(0, 1280), random.randint(0, 700)
+        self.speed_x = random.randint(0, 3)
+        self.speed_y = random.randint(0, 3)
+
+    def update(self):
+        self.y += self.speed_y
+        self.x += self.speed_x
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 5, 5, self.x, self.y)
+
+
+# beat attack
+class BeatAttack_UP:
+    def __init__(self):
+        self.image = load_image('attack_beat_up.png')
+        self.frame = 0
+        self.timer = 0
+
+    def update(self):
+        self.timer += 1
+        if self.timer % 50 == 0:
+            self.frame = (self.frame + 1) % 2
+
+    def draw(self):
+        self.image.clip_draw(0, self.frame * 300, 1280, 300, 640, 550)
+
+
+class BeatAttack_Down:
+    def __init__(self):
+        self.image = load_image('attack_beat.png')
+        self.frame = 0
+        self.timer = 0
+
+    def update(self):
+        self.timer += 1
+        if self.timer % 50 == 0:
+            self.frame = (self.frame + 1) % 2
+
+    def draw(self):
+        self.image.clip_draw(0, self.frame * 300, 1280, 300, 640, 150)
 
 def enter():
-    global background, player, moving_boss, big_enemy, small_enemy
+    global background, player, moving_boss, big_enemy, small_enemy, smallest_enemy, beat_up, beat_down
     player = Player()
     background = Background()
     moving_boss = Moving_Boss()
     big_enemy = BigEnemy()
     small_enemy = SmallEnemy()
+    smallest_enemy = SmallestEnemy()
+    beat_up = BeatAttack_UP()
+    beat_down = BeatAttack_Down()
 
 def exit():
-    global background, player, moving_boss, big_enemy, small_enemy
+    global background, player, moving_boss, big_enemy, small_enemy, smallest_enemy, beat_up, beat_down
     del(background)
     del(player)
     del(moving_boss)
     del(big_enemy)
     del(small_enemy)
+    del(smallest_enemy)
+    del(beat_up)
+    del(beat_down)
     pass
 
 
@@ -116,14 +169,16 @@ def pause():
 def resume():
     pass
 
-
+dash = 0
 def handle_events():
+    global dash
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.change_state(title_state)
+        # 상하좌우 이동
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_DOWN:
                 player.dir_y -= 2
@@ -133,6 +188,7 @@ def handle_events():
                 player.dir_x += 2
             elif event.key == SDLK_LEFT:
                 player.dir_x -= 2
+
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_UP or event.key == SDLK_DOWN:
                 player.dir_y = 0
@@ -149,6 +205,10 @@ def update():
     moving_boss.update()
     big_enemy.update()
     small_enemy.update()
+    smallest_enemy.update()
+    beat_up.update()
+    beat_down.update()
+
     pass
 
 def draw():
@@ -158,6 +218,9 @@ def draw():
     moving_boss.draw()
     big_enemy.draw()
     small_enemy.draw()
+    smallest_enemy.draw()
+    beat_up.draw()
+    beat_down.draw()
     update_canvas()
 
 
