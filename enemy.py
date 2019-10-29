@@ -15,5 +15,3 @@ class Enemy:
 
     def draw(self):
         self.image.clup_draw(0, 0, 30, 30, self.x, self.y)
-
-
