@@ -169,9 +169,7 @@ def pause():
 def resume():
     pass
 
-dash = 0
 def handle_events():
-    global dash
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -219,8 +217,8 @@ def draw():
     big_enemy.draw()
     small_enemy.draw()
     smallest_enemy.draw()
-    beat_up.draw()
-    beat_down.draw()
+    #beat_up.draw()
+    #beat_down.draw()
     update_canvas()
 
 
