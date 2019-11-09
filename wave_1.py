@@ -5,6 +5,7 @@ import os
 import game_framework
 from pico2d import *
 import title_state
+import wave_2
 
 name = "wave_1"
 background = None
@@ -75,9 +76,16 @@ def draw():
     boss_face.draw()
     update_canvas()
 
+time = 0
 
 def update():
+    global time
     rect.update()
+
+    if time > 10.0:
+        logo_time = 0
+        game_framework.change_state(wave_2)
+    time += 0.01
     pass
 
 def handle_events():
