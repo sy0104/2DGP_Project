@@ -5,9 +5,9 @@ import os
 import game_framework
 from pico2d import *
 import title_state
-import wave_2
+import stage_2
 
-name = "wave_1"
+name = "stage_1"
 background = None
 rect = None
 boss_face = None
@@ -84,7 +84,7 @@ def update():
 
     if time > 10.0:
         logo_time = 0
-        game_framework.change_state(wave_2)
+        game_framework.change_state(stage_2)
     time += 0.01
     pass
 
