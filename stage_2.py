@@ -63,7 +63,7 @@ class BeatAttack_UP:
 # 아래
 class BeatAttack_Down:
     def __init__(self):
-        self.image = load_image('Resource\\image\\attack_beat.png')
+        self.image = load_image('Resource\\image\\attack_beat_down.png')
         self.frame = 0
         self.timer = 0
 
@@ -75,41 +75,9 @@ class BeatAttack_Down:
     def draw(self):
         self.image.clip_draw(0, self.frame * 300, 1280, 300, 640, 150)
 
-#small enemy
-class SmallEnemy:
-    def __init__(self):
-        self.image = load_image('Resource\\image\\small_enemy.png')
-        self.x, self.y = 0, random.randint(0, 700)
-        self.speed = random.randint(0, 3)
-
-    def update(self):
-        self.x += self.speed
-
-    def draw(self):
-        self.image.clip_draw(0, 0, 15, 15, self.x, self.y)
-
-#smallest enemy
-class SmallestEnemy:
-    def __init__(self):
-        self.image = load_image('Resource\\image\\smallest_enemy.png')
-        self.x, self.y = random.randint(0, 1280), random.randint(0, 700)
-        self.speed = random.randint(0, 3)
-
-    def update(self):
-        self.y += self.speed
-
-    def draw(self):
-        self.image.clip_draw(0, 0, 5, 5, self.x, self.y)
-
-
-small = SmallEnemy()
-smallest = SmallestEnemy()
-
-small_enemies = [SmallEnemy() for i in range(10)]
-smallest_enemies = [SmallestEnemy() for i in range(10)]
 
 def enter():
-    global background, rect, beat_up, beat_down, small, smallest
+    global background, rect, beat_up, beat_down
     background = Background()
     rect = Rect()
     beat_up = BeatAttack_UP()
@@ -130,10 +98,7 @@ def draw():
     rect.draw()
     beat_up.draw()
     beat_down.draw()
-    for small in small_enemies:
-        small.draw()
-    for smallest in smallest_enemies:
-        smallest.draw()
+
     update_canvas()
 
 
@@ -141,10 +106,8 @@ def update():
     rect.update()
     beat_up.update()
     beat_down.update()
-    for small in small_enemies:
-        small.update()
-    for smallest in smallest_enemies:
-        smallest.update()
+
+
     pass
 
 def handle_events():
