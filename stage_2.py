@@ -58,7 +58,7 @@ class BeatAttack_UP:
             self.frame = (self.frame + 1) % 2
 
     def draw(self):
-        self.image.clip_draw(0, self.frame * 300, 1280, 300, 640, 550)
+        self.image.clip_draw(0, self.frame * 250, 1280, 250, 640, 600)
 
 # 아래
 class BeatAttack_Down:
@@ -73,7 +73,7 @@ class BeatAttack_Down:
             self.frame = (self.frame + 1) % 2
 
     def draw(self):
-        self.image.clip_draw(0, self.frame * 300, 1280, 300, 640, 150)
+        self.image.clip_draw(0, self.frame * 250, 1280, 250, 640, 100)
 
 
 def enter():
