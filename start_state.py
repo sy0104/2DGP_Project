@@ -12,7 +12,6 @@ def enter():
     image = load_image('Resource\\image\\start_image.png')
 
 
-
 def exit():
     global image
     del(image)
