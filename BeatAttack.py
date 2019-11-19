@@ -18,7 +18,8 @@ class BeatAttack_UP:
         self.image.clip_draw(0, self.frame * 250, 1280, 250, 640, 600)
 
     def get_bb(self):
-        return self.x - 640, self.y - 125, self.x + 640, self.y + 125
+        return self.x - 640, self.y - 90, self.x + 640, self.y + 90
+
 
 # 아래
 class BeatAttack_Down:
@@ -37,4 +38,4 @@ class BeatAttack_Down:
         self.image.clip_draw(0, self.frame * 250, 1280, 250, self.x, self.y)
 
     def get_bb(self):
-        return self.x - 640, self.y - 125, self.x + 640, self.y + 125
+        return self.x - 640, self.y - 90, self.x + 640, self.y + 90
