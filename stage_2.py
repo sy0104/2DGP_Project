@@ -4,13 +4,13 @@ import os
 
 import game_framework
 from pico2d import *
-import title_state
+import game_world
+import stage3_image
+from rect import Rect
+from BeatAttack import BeatAttack_Down
+from BeatAttack import BeatAttack_UP
 
 name = "stage_2"
-background = None
-rect = None
-beat_up = None
-beat_down = None
 
 
 # 배경
@@ -21,100 +21,77 @@ class Background:
     def draw(self):
         self.image.draw(1280//2, 700//2)
 
-# 플레이어 캐릭터
-class Rect:
-    def __init__(self):
-        self.image = load_image('Resource\\image\\player.png')
-        self.x, self.y = 100, 300
-        self.frame = 0
-        self.time = 0
-        self.hp = 4
-        self.dir_x = 0
-        self.dir_y = 0
-
     def update(self):
-        self.x += self.dir_x
-        self.y += self.dir_y
-        if self.x >= 1265 or self.x <= 15:
-            self.dir_x = 0
-        if self.y >= 685 or self.y <= 15:
-            self.dir_y = 0
         pass
-
-    def draw(self):
-        self.image.clip_draw(0, 0, 30, 30, self.x, self.y)
-
-# wave2 - 위아래 공격
-# 위
-class BeatAttack_UP:
-    def __init__(self):
-        self.image = load_image('Resource\\image\\attack_beat_up.png')
-        self.frame = 0
-        self.timer = 0
-
-    def update(self):
-        self.timer += 1
-        if self.timer % 50 == 0:
-            self.frame = (self.frame + 1) % 2
-
-    def draw(self):
-        self.image.clip_draw(0, self.frame * 250, 1280, 250, 640, 600)
-
-# 아래
-class BeatAttack_Down:
-    def __init__(self):
-        self.image = load_image('Resource\\image\\attack_beat_down.png')
-        self.frame = 0
-        self.timer = 0
-
-    def update(self):
-        self.timer += 1
-        if self.timer % 50 == 0:
-            self.frame = (self.frame + 1) % 2
-
-    def draw(self):
-        self.image.clip_draw(0, self.frame * 250, 1280, 250, 640, 100)
 
 
 def enter():
-    global background, rect, beat_up, beat_down
-    background = Background()
+    global rect, background, beat_up, beat_down
     rect = Rect()
+    background = Background()
     beat_up = BeatAttack_UP()
     beat_down = BeatAttack_Down()
+    game_world.add_object(background, 0)
+    game_world.add_object(rect, 1)
+    game_world.add_object(beat_up, 0)
+    game_world.add_object(beat_down, 0)
 
 
 def exit():
-    global background, rect, beat_up, beat_down
-    del (background)
-    del (rect)
-    del (beat_up)
-    del (beat_down)
+    game_world.clear()
 
 
 def draw():
     clear_canvas()
-    background.draw()
-    rect.draw()
-    beat_up.draw()
-    beat_down.draw()
-
+    for game_object in game_world.all_objects():
+        game_object.draw()
     update_canvas()
 
-
+time = 0
 def update():
-    rect.update()
-    beat_up.update()
-    beat_down.update()
+    global time
+    for game_object in game_world.all_objects():
+        game_object.update()
+    if collide(rect, beat_up):
+        rect.hp -= 1
+        print("COLLISION")
+    if collide(rect, beat_down):
+        rect.hp -= 1
+        print("COLLISION")
+
+    # stage3으로 넘어감
+    if time > 10.0:
+        logo_time = 0
+        game_framework.change_state(stage3_image)
+    time += 0.01
 
 
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b: return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+    return True
+
+
+def pause():
     pass
+
+
+def resume():
+    pass
+
 
 def handle_events():
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
+        #elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            #game_framework.change_state(title_state)
         # 상하좌우 이동
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_DOWN:
@@ -125,16 +102,14 @@ def handle_events():
                 rect.dir_x += 2
             elif event.key == SDLK_LEFT:
                 rect.dir_x -= 2
+            # hp 설정
+            elif event.key == SDLK_p:
+                rect.hp = 2
+            elif event.key == SDLK_o:
+                rect.hp = 1
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_UP or event.key == SDLK_DOWN:
                 rect.dir_y = 0
             elif event.key == SDLK_RIGHT or event.key == SDLK_LEFT:
                 rect.dir_x = 0
-
-def pause():
-    pass
-
-def resume():
-    pass
-
