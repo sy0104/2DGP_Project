@@ -17,6 +17,10 @@ from Boss import BossFace
 
 name = "MainState"
 
+background = None
+smallest_enemies = []
+small_enemies = []
+
 
 # 배경
 class Background:
@@ -28,27 +32,34 @@ class Background:
     def update(self):
         pass
 
+
 def enter():
-    global rect, background, boss_face, SmallestEnemy, SmallEnemy
-    rect = Rect()
-    boss_face = BossFace()
-    SmallestEnemy = [SmallestEnemy() for i in range(15)]
-    SmallEnemy = [SmallEnemy() for j in range(10)]
+    global background
     background = Background()
     game_world.add_object(background, 0)
+
+    global rect
+    rect = Rect()
     game_world.add_object(rect, 1)
+
+    global boss_face
+    boss_face = BossFace()
     game_world.add_object(boss_face, 0)
-    for SmallestEnemy in SmallestEnemy:
-        game_world.add_object(SmallestEnemy, 0)
-    for SmallEnemy in SmallEnemy:
-        game_world.add_object(SmallEnemy, 0)
+
+    global smallest_enemies, SmallestEnemy
+    smallest_enemies = [SmallestEnemy() for i in range(20)]
+    game_world.add_objects(smallest_enemies, 0)
+
+    global small_enemies, SmallEnemy
+    small_enemies = [SmallEnemy() for j in range(10)]
+    game_world.add_objects(small_enemies, 0)
 
     pass
+
 
 def exit():
     game_world.clear()
     pass
-
 
 
 def pause():
@@ -58,14 +69,14 @@ def pause():
 def resume():
     pass
 
+
 def handle_events():
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            #game_framework.change_state(title_state)
-            game_framework.push_state(pause_state)
+            game_framework.quit()
         # 상하좌우 이동
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_DOWN:
@@ -97,10 +108,26 @@ def update():
     global next_stage_time, protecting_time
     for game_object in game_world.all_objects():
         game_object.update()
+
+    # boss_face & rect 충돌
     if collide(rect, boss_face) and not rect.isCollide:
         rect.isCollide = True
         rect.hp -= 1
-        print("COLLISION")
+        print("rect & boss_face COLLISION")
+
+    # smallest_enemies & rect 충돌
+    for smallest in smallest_enemies:
+        if collide(smallest, rect) and not rect.isCollide:
+            rect.isCollide = True
+            rect.hp -= 1
+            print("rect & smallest enemy COLLISION")
+
+    # small_enemies & rect 충돌
+    for small in small_enemies:
+        if collide(small, rect) and not rect.isCollide:
+            rect.isCollide = True
+            rect.hp -= 1
+            print("rect & small enemy COLLISION")
 
     # stage2로 넘어감
     if next_stage_time > 1000.0:
