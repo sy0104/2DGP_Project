@@ -12,7 +12,6 @@ def enter():
     image = load_image('Resource\\image\\Stage_3.png')
 
 
-
 def exit():
     global image
     del(image)
@@ -33,6 +32,7 @@ def draw():
     clear_canvas()
     image.draw(1280//2, 700//2)
     update_canvas()
+
 
 def handle_events():
     events = get_events()
