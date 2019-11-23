@@ -47,7 +47,7 @@ def enter():
     game_world.add_object(boss_face, 0)
 
     global smallest_enemies, SmallestEnemy
-    smallest_enemies = [SmallestEnemy() for i in range(20)]
+    smallest_enemies = [SmallestEnemy() for i in range(25)]
     game_world.add_objects(smallest_enemies, 0)
 
     global small_enemies, SmallEnemy
@@ -88,10 +88,14 @@ def handle_events():
             elif event.key == SDLK_LEFT:
                 rect.dir_x -= 2
             # hp 설정 치트키
-            elif event.key == SDLK_p:
-                rect.hp = 2
-            elif event.key == SDLK_o:
+            elif event.key == SDLK_1:
                 rect.hp = 1
+            elif event.key == SDLK_2:
+                rect.hp = 2
+            elif event.key == SDLK_3:
+                rect.hp = 3
+            elif event.key == SDLK_4:
+                rect.hp = 1000
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_UP or event.key == SDLK_DOWN:
@@ -130,10 +134,9 @@ def update():
             print("rect & small enemy COLLISION")
 
     # stage2로 넘어감
-    if next_stage_time > 1000.0:
-        logo_time = 0
-        game_framework.change_state(stage2_image)
     next_stage_time += 0.01
+    if next_stage_time > 5.0:
+        game_framework.change_state(stage2_image)
 
     # rect.hp == 0이 되면 game over
     if rect.hp <= 0:
