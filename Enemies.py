@@ -12,7 +12,7 @@ class SmallestEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\smallest_enemy.png')
         self.x, self.y = random.randint(3, 1277), random.randint(3, 697)
-        self.speed = random.randint(1, 3)
+        self.speed = random.randint(1, 4)
         self.dir = 1
         self.start_place = random.randint(1, 4)
 
@@ -27,22 +27,21 @@ class SmallestEnemy:
 
     def update(self):
         if self.start_place == 1:
-            self.y += self.speed * self.dir
+            self.y += self.speed
             if self.y >= 700-2.5 or self.y <= 0-2.5:
-                self.dir *= -1
+                self.speed *= -1
         elif self.start_place == 2:
-            self.x += self.speed * self.dir
+            self.x += self.speed
             if self.x >= 1280-2.5 or self.x <= 0+2.5:
-                self.dir *= -1
+                self.speed *= -1
         elif self.start_place == 3:
-            self.y -= self.speed * self.dir
+            self.y -= self.speed
             if self.y <= 0+2.5 or self.y >= 700-2.5:
-                self.dir *= -1
+                self.speed *= -1
         elif self.start_place == 4:
             self.x -= self.speed
-            if self.x >= 0+2.5 or self.x <= 1280-2.5:
-                self.dir *= -1
-
+            if self.x <= 0+2.5 or self.x >= 1280-2.5:
+                self.speed *= -1
 
     def draw(self):
         self.image.clip_draw(0, 0, 5, 5, self.x, self.y)
@@ -54,16 +53,36 @@ class SmallestEnemy:
 class SmallEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\small_enemy.png')
-        self.x, self.y = random.randint(15, 1265), random.randint(15, 685)
-        self.speed_x = random.randint(1, 5)
-        self.speed_y = random.randint(1, 5)
+        self.speed = random.randint(1, 3)
         self.dir = 1
+        self.start_place = random.randint(1, 4)
+
+        if self.start_place == 1:
+            self.x, self.y = random.randint(15, 1265), 15
+        elif self.start_place == 2:
+            self.x, self.y = 15, random.randint(15, 685)
+        elif self.start_place == 3:
+            self.x, self.y = random.randint(15, 1265), 685
+        elif self.start_place == 4:
+            self.x, self.y = 1265, random.randint(15, 685)
 
     def update(self):
-        if self.dir == 0:
-            self.x += self.speed_x
-        else:
-            self.y += self.speed_y
+        if self.start_place == 1:
+            self.y += self.speed
+            if self.y >= 700-7.5 or self.y <= 0-7.5:
+                self.speed *= -1
+        elif self.start_place == 2:
+            self.x += self.speed
+            if self.x >= 1280-7.5 or self.x <= 0+7.5:
+                self.speed *= -1
+        elif self.start_place == 3:
+            self.y -= self.speed
+            if self.y <= 0+7.5 or self.y >= 700-7.5:
+                self.speed *= -1
+        elif self.start_place == 4:
+            self.x -= self.speed
+            if self.x <= 0+7.5 or self.x >= 1280-7.5:
+                self.speed *= -1
 
     def draw(self):
         self.image.clip_draw(0, 0, 15, 15, self.x, self.y)
@@ -76,15 +95,35 @@ class BigEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\big_enemy.png')
         self.x, self.y = random.randint(30, 1250), random.randint(30, 670)
-        self.speed_x = random.randint(1, 5)
-        self.speed_y = random.randint(1, 5)
-        self.dir = 1
+        self.speed = random.randint(1, 3)
+        self.start_place = random.randint(1, 4)
+
+        if self.start_place == 1:
+            self.x, self.y = random.randint(30, 1250), 30
+        elif self.start_place == 2:
+            self.x, self.y = 30, random.randint(30, 670)
+        elif self.start_place == 3:
+            self.x, self.y = random.randint(30, 1250), 670
+        elif self.start_place == 4:
+            self.x, self.y = 1250, random.randint(30, 670)
 
     def update(self):
-        if self.dir == 0:
-            self.x += self.speed_x
-        else:
-            self.y += self.speed_y
+        if self.start_place == 1:
+            self.y += self.speed
+            if self.y >= 700-15 or self.y <= 0-15:
+                self.speed *= -1
+        elif self.start_place == 2:
+            self.x += self.speed
+            if self.x >= 1280-15 or self.x <= 0+15:
+                self.speed *= -1
+        elif self.start_place == 3:
+            self.y -= self.speed
+            if self.y <= 0+15 or self.y >= 700-15:
+                self.speed *= -1
+        elif self.start_place == 4:
+            self.x -= self.speed
+            if self.x <= 0+15 or self.x >= 1280-15:
+                self.speed *= -1
 
     def draw(self):
         self.image.clip_draw(0, 0, 30, 30, self.x, self.y)
