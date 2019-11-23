@@ -6,12 +6,19 @@ import game_framework
 from pico2d import *
 import game_world
 import stage3_image
+import title_state
+import gameover_image
+
 from rect import Rect
-from BeatAttack import BeatAttack_Down
-from BeatAttack import BeatAttack_UP
+from BeatAttack import BeatAttack_Down, BeatAttack_UP
+from Enemies import SmallestEnemy, SmallEnemy, FallingEnemy
 
 name = "stage_2"
 
+background = None
+smallest_enemies = []
+small_enemies = []
+falling_enemies = []
 
 # 배경
 class Background:
@@ -26,15 +33,34 @@ class Background:
 
 
 def enter():
-    global rect, background, beat_up, beat_down
+    global rect
     rect = Rect()
-    background = Background()
-    beat_up = BeatAttack_UP()
-    beat_down = BeatAttack_Down()
-    game_world.add_object(background, 0)
     game_world.add_object(rect, 1)
-    game_world.add_object(beat_up, 0)
-    game_world.add_object(beat_down, 0)
+
+    global background
+    background = Background()
+    game_world.add_object(background, 0)
+
+    global beat_up
+    beat_up = BeatAttack_UP()
+    game_world.add_object(beat_up, 1)
+
+    global beat_down
+    beat_down = BeatAttack_Down()
+    game_world.add_object(beat_down, 1)
+
+    global smallest_enemies, SmallestEnemy
+    smallest_enemies = [SmallestEnemy() for i in range(20)]
+    game_world.add_objects(smallest_enemies, 0)
+
+    global small_enemies, SmallEnemy
+    small_enemies = [SmallEnemy() for j in range(10)]
+    game_world.add_objects(small_enemies, 0)
+
+    global falling_enemies
+    falling_enemies = [FallingEnemy() for k in range(7)]
+    game_world.add_objects(falling_enemies, 0)
+
 
 
 def exit():
@@ -47,23 +73,47 @@ def draw():
         game_object.draw()
     update_canvas()
 
-time = 0
+
+next_stage_time = 0
+
 def update():
-    global time
+    global next_stage_time
     for game_object in game_world.all_objects():
         game_object.update()
+
+    # beat_up & rect 충돌
     if collide(rect, beat_up):
         rect.hp -= 1
         print("COLLISION")
+
+    # beat_down & rect 충돌
     if collide(rect, beat_down):
         rect.hp -= 1
         print("COLLISION")
 
+    # smallest_enemies & rect 충돌
+    for smallest in smallest_enemies:
+        if collide(smallest, rect) and not rect.isCollide:
+            rect.isCollide = True
+            rect.hp -= 1
+            print("rect & smallest enemy COLLISION")
+
+    # small_enemies & rect 충돌
+    for small in small_enemies:
+        if collide(small, rect) and not rect.isCollide:
+            rect.isCollide = True
+            rect.hp -= 1
+            print("rect & small enemy COLLISION")
+
     # stage3으로 넘어감
-    if time > 10.0:
-        logo_time = 0
+    next_stage_time += 0.01
+    if next_stage_time > 1000.0:
         game_framework.change_state(stage3_image)
-    time += 0.01
+
+    # rect.hp == 0이 되면 game over
+    if rect.hp <= 0:
+        game_framework.change_state(gameover_image)
+    pass
 
 
 def collide(a, b):
@@ -90,8 +140,8 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-        #elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            #game_framework.change_state(title_state)
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            game_framework.change_state(title_state)
         # 상하좌우 이동
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_DOWN:
@@ -102,11 +152,15 @@ def handle_events():
                 rect.dir_x += 2
             elif event.key == SDLK_LEFT:
                 rect.dir_x -= 2
-            # hp 설정
-            elif event.key == SDLK_p:
-                rect.hp = 2
-            elif event.key == SDLK_o:
+            # hp 설정 치트키
+            elif event.key == SDLK_1:
                 rect.hp = 1
+            elif event.key == SDLK_2:
+                rect.hp = 2
+            elif event.key == SDLK_3:
+                rect.hp = 3
+            elif event.key == SDLK_4:
+                rect.hp = 1000
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_UP or event.key == SDLK_DOWN:
