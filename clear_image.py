@@ -1,7 +1,7 @@
 import game_framework
 from pico2d import *
 
-name = "clear_image"
+name = "clear"
 image = None
 
 
