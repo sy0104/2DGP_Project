@@ -11,9 +11,7 @@ import random
 class SmallestEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\smallest_enemy.png')
-        self.x, self.y = random.randint(3, 1277), random.randint(3, 697)
         self.speed = random.randint(1, 4)
-        self.dir = 1
         self.start_place = random.randint(1, 4)
 
         if self.start_place == 1:
@@ -54,7 +52,6 @@ class SmallEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\small_enemy.png')
         self.speed = random.randint(1, 3)
-        self.dir = 1
         self.start_place = random.randint(1, 4)
 
         if self.start_place == 1:
@@ -94,7 +91,6 @@ class SmallEnemy:
 class BigEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\big_enemy.png')
-        self.x, self.y = random.randint(30, 1250), random.randint(30, 670)
         self.speed = random.randint(1, 3)
         self.start_place = random.randint(1, 4)
 
@@ -130,3 +126,32 @@ class BigEnemy:
 
     def get_bb(self):
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
+
+
+class FallingEnemy:
+    def __init__(self):
+        self.image = load_image('Resource\\image\\small_enemy_falling.png')
+        self.x, self.y = random.randint(15, 1265), 15
+        self.speed_x = 1
+        self.speed_y = random.randint(2, 4)
+
+    def update(self):
+        self.y += self.speed_y
+        if self.y >= 640:
+            self.x += self.speed_x
+            if self.y >= 580 or self.y <= 15:
+                self.speed_y *= -1
+            if self.x >= 1265 or self.x <= 15:
+                self.speed_x *= -1
+        else:
+            self.x -= self.speed_x
+            if self.y >= 580or self.y <= 15:
+                self.speed_y *= -1
+            if self.x >= 1265 or self.x <= 15:
+                self.speed_x *= -1
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 15, 15, self.x, self.y)
+
+    def get_bb(self):
+        return self.x - 7.5, self.y - 7.5, self.x + 7.5, self.y + 7.5
