@@ -105,9 +105,16 @@ def update():
             rect.hp -= 1
             print("rect & small enemy COLLISION")
 
+    # falling_enemies & rect 충돌
+    for falling in falling_enemies:
+        if collide(falling, rect) and not rect.isCollide:
+            rect.isCollide = True
+            rect.hp -= 1
+            print("rect & falling enemy COLLISION")
+
     # stage3으로 넘어감
     next_stage_time += 0.01
-    if next_stage_time > 1000.0:
+    if next_stage_time > 15.0:
         game_framework.change_state(stage3_image)
 
     # rect.hp == 0이 되면 game over
