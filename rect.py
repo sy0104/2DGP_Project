@@ -39,7 +39,7 @@ class Rect:
     # hp 작을수록 rect 크기 작아짐
     # protecting 중에는 rect 색 바꿈
     def draw(self):
-        if self.hp == 3 and not self.protecting:
+        if self.hp >= 3 and not self.protecting:
             self.image_hp3.clip_draw(0, 0, 30, 30, self.x, self.y)
         elif self.hp == 2 and not self.protecting:
             self.image_hp2.clip_draw(0, 0, 20, 20, self.x, self.y)
