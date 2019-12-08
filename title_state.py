@@ -4,11 +4,15 @@ import stage1_image
 
 name = "TitleState"
 image = None
+bgm = None
 
 
 def enter():
-    global image
+    global image, bgm
     image = load_image('Resource\\image\\title_image.png')
+    bgm = load_music('Resource\\sound\\menu.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
 
 def exit():
