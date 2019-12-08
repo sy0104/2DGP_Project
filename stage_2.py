@@ -8,17 +8,19 @@ import game_world
 import stage3_image
 import title_state
 import gameover_image
+import clear_image
 
 from rect import Rect
-from BeatAttack import BeatAttack_Down, BeatAttack_UP
-from Enemies import SmallestEnemy, SmallEnemy, FallingEnemy
+from BackgroundAttack import BeatAttack_Down, BeatAttack_UP
+from Enemies import SmallestEnemy, SmallEnemy, BouncingEnemy
 
 name = "stage_2"
 
 background = None
 smallest_enemies = []
 small_enemies = []
-falling_enemies = []
+bouncing_enemies = []
+
 
 # 배경
 class Background:
@@ -50,16 +52,16 @@ def enter():
     game_world.add_object(beat_down, 1)
 
     global smallest_enemies, SmallestEnemy
-    smallest_enemies = [SmallestEnemy() for i in range(20)]
+    smallest_enemies = [SmallestEnemy() for i in range(15)]
     game_world.add_objects(smallest_enemies, 0)
 
     global small_enemies, SmallEnemy
     small_enemies = [SmallEnemy() for j in range(10)]
     game_world.add_objects(small_enemies, 0)
 
-    global falling_enemies
-    falling_enemies = [FallingEnemy() for k in range(7)]
-    game_world.add_objects(falling_enemies, 0)
+    global bouncing_enemies
+    bouncing_enemies = [BouncingEnemy() for k in range(5)]
+    game_world.add_objects(bouncing_enemies, 0)
 
 
 
@@ -75,11 +77,18 @@ def draw():
 
 
 next_stage_time = 0
+start_protecting = 0
+
 
 def update():
-    global next_stage_time
+    global next_stage_time, start_protecting
     for game_object in game_world.all_objects():
         game_object.update()
+
+    # 처음 시작할때 잠시 무적
+    start_protecting += 0.01
+    if start_protecting <= 2.0:
+        rect.isCollide = True
 
     # beat_up & rect 충돌
     if collide(rect, beat_up):
@@ -105,16 +114,16 @@ def update():
             rect.hp -= 1
             print("rect & small enemy COLLISION")
 
-    # falling_enemies & rect 충돌
-    for falling in falling_enemies:
-        if collide(falling, rect) and not rect.isCollide:
+    # bouncing_enemies & rect 충돌
+    for bouncing in bouncing_enemies:
+        if collide(bouncing, rect) and not rect.isCollide:
             rect.isCollide = True
             rect.hp -= 1
-            print("rect & falling enemy COLLISION")
+            print("rect & bouncing enemy COLLISION")
 
     # stage3으로 넘어감
     next_stage_time += 0.01
-    if next_stage_time > 15.0:
+    if next_stage_time > 60.0:
         game_framework.change_state(stage3_image)
 
     # rect.hp == 0이 되면 game over
@@ -168,6 +177,9 @@ def handle_events():
                 rect.hp = 3
             elif event.key == SDLK_4:
                 rect.hp = 1000
+            # 다음 스테이지로 넘어감
+            elif event.key == SDLK_n:
+                game_framework.change_state(stage3_image)
 
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_UP or event.key == SDLK_DOWN:
