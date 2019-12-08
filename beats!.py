@@ -5,3 +5,4 @@ import start_state
 open_canvas(1280, 700)
 game_framework.run(start_state)
 close_canvas()
+
