@@ -11,7 +11,7 @@ import random
 class SmallestEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\smallest_enemy.png')
-        self.speed = random.randint(1, 4)
+        self.speed = random.randint(1, 2)
         self.start_place = random.randint(1, 4)
 
         if self.start_place == 1:
@@ -51,7 +51,7 @@ class SmallestEnemy:
 class SmallEnemy:
     def __init__(self):
         self.image = load_image('Resource\\image\\small_enemy.png')
-        self.speed = random.randint(1, 3)
+        self.speed = random.randint(1, 2)
         self.start_place = random.randint(1, 4)
 
         if self.start_place == 1:
@@ -128,24 +128,25 @@ class BigEnemy:
         return self.x - 15, self.y - 15, self.x + 15, self.y + 15
 
 
-class FallingEnemy:
+# Bouncing Enemy 15X15
+class BouncingEnemy:
     def __init__(self):
-        self.image = load_image('Resource\\image\\small_enemy_falling.png')
+        self.image = load_image('Resource\\image\\bouncing_enemy.png')
         self.x, self.y = random.randint(15, 1265), 15
-        self.speed_x = 1
-        self.speed_y = random.randint(2, 4)
+        self.speed_x = random.randint(1, 2)
+        self.speed_y = random.randint(1, 2)
 
     def update(self):
         self.y += self.speed_y
-        if self.y >= 640:
+        if self.y >= 700:
             self.x += self.speed_x
-            if self.y >= 580 or self.y <= 15:
+            if self.y >= 680 or self.y <= 15:
                 self.speed_y *= -1
             if self.x >= 1265 or self.x <= 15:
                 self.speed_x *= -1
         else:
             self.x -= self.speed_x
-            if self.y >= 580or self.y <= 15:
+            if self.y >= 680or self.y <= 15:
                 self.speed_y *= -1
             if self.x >= 1265 or self.x <= 15:
                 self.speed_x *= -1
@@ -155,3 +156,44 @@ class FallingEnemy:
 
     def get_bb(self):
         return self.x - 7.5, self.y - 7.5, self.x + 7.5, self.y + 7.5
+
+
+# stage 3 떨어지는 톱니바퀴
+class Cogwheel:
+    def __init__(self):
+        self.image = load_image('Resource\\image\\cogwheel_1.png')
+        self.x, self.y = random.randint(40, 1260), 720
+        self.speed_y = random.randint(1, 5)
+
+    def update(self):
+        self.y -= self.speed_y
+        if self.y <= -40:
+            self.x = random.randint(40, 1260)
+            self.y = random.randint(740, 900)
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 40, 40, self.x, self.y)
+
+    def get_bb(self):
+        return self.x - 20, self.y - 20, self.x + 20, self.y + 20
+
+
+# stage 3 원모양 enemy
+class CircleEnemy:
+    def __init__(self):
+        self.image = load_image('Resource\\image\\enemy_circle.png')
+        self.x, self.y = random.randint(15, 1265), 715
+        self.speed_y = random.randint(1, 3)
+
+    def update(self):
+        self.y -= self.speed_y
+        if self.y <= -30:
+            self.x = random.randint(15, 1265)
+            self.y = random.randint(730,  850)
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 15, 15, self.x, self.y)
+
+    def get_bb(self):
+        return self.x - 7.5, self.y - 7.5, self.x + 7.5, self.y + 7.5
+
