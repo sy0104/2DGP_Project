@@ -29,7 +29,7 @@ class Rect:
         if self.isCollide:
             self.protecting = True
             self.protecting_time += 0.01
-            if self.protecting_time > 4.0:
+            if self.protecting_time > 3.0:
                 self.isCollide = False
                 self.protecting = False
                 self.protecting_time = 0.0
