@@ -9,11 +9,14 @@ import stage4_image
 import gameover_image
 from rect import Rect
 from Boss import CryingBoss, LongTear, ShortTear
+from Enemies import Cogwheel, CircleEnemy
 
 name = "stage_3"
 
 long_tears = []
 short_tears = []
+cogwheels = []
+circles = []
 
 # 배경
 class Background:
@@ -41,12 +44,20 @@ def enter():
     game_world.add_object(crying_boss, 0)
 
     global long_tears
-    long_tears = [LongTear() for i in range(2)]
+    long_tears = [LongTear() for i in range(1)]
     game_world.add_objects(long_tears, 0)
 
     global short_tears
-    short_tears = [ShortTear() for j in range(2)]
+    short_tears = [ShortTear() for j in range(1)]
     game_world.add_objects(short_tears, 0)
+
+    global cogwheels
+    cogwheels = [Cogwheel() for k in range(10)]
+    game_world.add_objects(cogwheels, 0)
+
+    global circles
+    circles = [CircleEnemy() for w in range(15)]
+    game_world.add_objects(circles, 0)
 
 
 def exit():
@@ -61,20 +72,26 @@ def draw():
 
 
 next_stage_time = 0
+start_protecting = 0
 
 
 def update():
-    global next_stage_time
+    global next_stage_time, start_protecting
     for game_object in game_world.all_objects():
         game_object.update()
 
     next_stage_time += 0.01
-    if next_stage_time > 1.0:
+    if next_stage_time > 70.0:
         game_framework.change_state(stage4_image)
 
     # rect.hp == 0이 되면 game over
     if rect.hp <= 0:
         game_framework.change_state(gameover_image)
+
+    # 처음 시작할때 잠시 무적
+    start_protecting += 0.01
+    if start_protecting <= 2.0:
+        rect.isCollide = True
 
     # crying boss & rect 충돌
     if collide(rect, crying_boss) and not rect.isCollide:
@@ -95,7 +112,20 @@ def update():
             rect.isCollide = True
             rect.hp -= 1
             print("rect & short tear COLLISION")
-    pass
+
+    # cogwheels & rect 충돌
+    for cogwheel in cogwheels:
+        if collide(cogwheel, rect) and not rect.isCollide:
+            rect.isCollide = True
+            rect.hp -= 1
+            print("rect & cogwheel COLLISION")
+
+    # circles & rect 충돌
+    for circle in circles:
+        if collide(circle, rect) and not rect.isCollide:
+            rect.isCollide = True
+            rect.hp -= 1
+            print("rect & circle COLLISION")
 
 
 def collide(a, b):
@@ -148,3 +178,5 @@ def handle_events():
                 rect.dir_y = 0
             elif event.key == SDLK_RIGHT or event.key == SDLK_LEFT:
                 rect.dir_x = 0
+            elif event.key == SDLK_n:
+                game_framework.change_state(stage4_image)
