@@ -3,11 +3,15 @@ from pico2d import *
 
 name = "clear"
 image = None
-
+bgm = None
 
 def enter():
-    global image
+    global image, bgm
     image = load_image('Resource\\image\\Clear.png')
+    bgm = load_music('Resource\\sound\\game_clear.mp3')
+    bgm.set_volume(64)
+    bgm.repeat_play()
+
 
 
 def exit():
