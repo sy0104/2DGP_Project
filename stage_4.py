@@ -76,6 +76,7 @@ def draw():
 next_stage_time = 0
 start_protecting = 0
 
+
 def update():
     global next_stage_time, start_protecting
     for game_object in game_world.all_objects():
@@ -99,7 +100,6 @@ def update():
         print("rect & wall COLLISION")
 
     if collide(rect, left_right_wall) and not rect.isCollide:
-        rect.isCollide = True
         rect.isCollide = True
         rect.hp -= 1
         print("rect & wall COLLISION")
@@ -187,3 +187,5 @@ def handle_events():
                 rect.dir_y = 0
             elif event.key == SDLK_RIGHT or event.key == SDLK_LEFT:
                 rect.dir_x = 0
+            elif event.key == SDLK_n:
+                game_framework.change_state(clear_image)

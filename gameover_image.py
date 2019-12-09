@@ -1,5 +1,6 @@
 import game_framework
 from pico2d import *
+import title_state
 
 name = "gameover"
 image = None
@@ -33,4 +34,6 @@ def handle_events():
     for event in events:
         if (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
             game_framework.quit()
+        if (event.type, event.key) == (SDL_KEYDOWN, SDLK_RETURN):
+            game_framework.change_state(title_state)
     pass
