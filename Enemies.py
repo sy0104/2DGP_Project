@@ -163,7 +163,7 @@ class Cogwheel:
     def __init__(self):
         self.image = load_image('Resource\\image\\cogwheel_1.png')
         self.x, self.y = random.randint(40, 1260), 720
-        self.speed_y = random.randint(1, 5)
+        self.speed_y = random.randint(1, 4)
 
     def update(self):
         self.y -= self.speed_y
