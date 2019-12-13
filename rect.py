@@ -27,6 +27,7 @@ class Rect:
             self.dir_y = 0
 
         if self.isCollide:
+
             self.protecting = True
             self.protecting_time += 0.01
             if self.protecting_time > 3.0:
@@ -56,4 +57,5 @@ class Rect:
             return self.x - 10, self.y - 10, self.x + 10, self.y + 10
         else:
             return self.x - 7.5, self.y - 7.5, self.x + 7.5, self.y + 7.5
+
 
